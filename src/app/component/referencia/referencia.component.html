@@ -1,0 +1,70 @@
+<div class="col-12">
+
+  <mat-accordion>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <i class="material-icons">search</i> <div class="titulo">Filtrar Referências</div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field>
+            <input matInput [(ngModel)]="parametro.filtros.descricao" placeholder="Descrição">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="acao-btn">
+          <button mat-flat-button class="btn-buscar" (click)="find()">Buscar</button>
+        </div>
+        <div class="acao-btn">
+          <button mat-flat-button class="btn-limpar" (click)="limpar()">Limpar</button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+
+<div class="col-12">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar class="color-4">
+        <i class="material-icons">list</i>
+      </div>
+      <mat-card-title>Resultado da busca</mat-card-title>
+      <mat-card-subtitle>Para modificar o resultado utilize os filtros acima</mat-card-subtitle>
+      <div class="btn-adicionar">
+        <button mat-mini-fab color="primary" title="Adicionar Referência" (click)="openDialogNew()">
+          <mat-icon aria-label="icon-buttont icon">add</mat-icon>
+        </button>
+      </div>
+
+    </mat-card-header>
+    <mat-card-content *ngIf="!paginador.semRegistro">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="descricao">
+          <th mat-header-cell *matHeaderCellDef> Referência </th>
+          <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+        </ng-container>
+        <ng-container matColumnDef="acao">
+          <th mat-header-cell *matHeaderCellDef class="acao"> AÇÃO </th>
+          <td mat-cell *matCellDef="let element" class="acao">
+            <i class="material-icons mouse acao-grid" matTooltip="Editar" [matTooltipPosition]="'above'"
+              (click)="openDialogEdit(element)">edit</i>
+            <i class="material-icons mouse acao-grid" matTooltip="Excluir" [matTooltipPosition]="'above'"
+              (click)="openDialogExcluir(element)">delete</i>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <div class="f-right">Página {{paginador.pagina}}</div>
+      <mat-paginator #paginatorComponent *ngIf="paginador" [length]="paginador.total" [pageSize]="paginador.elementos"
+        [hidePageSize]="true" (page)="find($event)">
+      </mat-paginator>
+    </mat-card-content>
+    <div>{{paginador.resumo}}</div>
+  </mat-card>
+</div>
